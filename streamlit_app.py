@@ -6,6 +6,57 @@ from io import BytesIO
 
 st.title("90s Etch A Sketch")
 
+import streamlit.components.v1 as components
+
+# Replace the existing components.html code block with this:
+
+components.html(
+    f"""
+<script>
+// Wait for the document to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {{
+    // We need to wait a bit for Streamlit elements to be rendered
+    setTimeout(function() {{
+        const doc = window.parent.document;
+        const buttons = Array.from(doc.querySelectorAll('button[kind=secondary]'));
+        
+        // Find buttons by their text content
+        const up_button = buttons.find(el => el.innerText === "⬆️");
+        const down_button = buttons.find(el => el.innerText === "⬇️");
+        const left_button = buttons.find(el => el.innerText === "⬅️");
+        const right_button = buttons.find(el => el.innerText === "➡️");
+        
+        // Attach the event listener to the parent document
+        window.parent.addEventListener('keydown', function(e) {{
+            // Using key instead of keyCode (which is deprecated)
+            switch (e.key) {{
+                case "ArrowLeft":
+                    e.preventDefault();
+                    left_button.click();
+                    break;
+                case "ArrowUp":
+                    e.preventDefault();
+                    up_button.click();
+                    break;
+                case "ArrowRight":
+                    e.preventDefault();
+                    right_button.click();
+                    break;
+                case "ArrowDown":
+                    e.preventDefault();
+                    down_button.click();
+                    break;
+            }}
+        }}, true);  // Use capture phase for better key handling
+        
+        console.log("Keyboard event handlers initialized");
+    }}, 1000);  // Give it a second to ensure elements are loaded
+}});
+</script>
+""",
+    height=0,
+    width=0,
+)
 # Initialize session state variables if they don't exist
 if 'canvas' not in st.session_state:
     # Create a blank canvas with a light gray background
